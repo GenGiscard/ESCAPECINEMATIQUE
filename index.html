@@ -152,7 +152,6 @@
     </div>
 
     <script>
-        // Association de chaque entracte vidéo après une énigme résolue
         const interludes = {
             1: { video: "scene1.mp4", speaker: "Journal de Bord", text: "Année 2042. 04h00 du matin. L'ascenseur se bloque brutalement au Niveau -7 du Laboratoire de Cinématique. Le silence absolu qui règne ici est anormal." },
             2: { video: "scene2.mp4", speaker: "Vous", text: "Premier terminal validé. Mais en avançant, je découvre un couloir de laboratoire dévasté, câbles arrachés et écrans brisés. Les prototypes se sont rebellés !" },
@@ -187,7 +186,6 @@
             const data = interludes[key];
             if (!data) return;
 
-            // Cache l'UI du jeu et affiche l'entracte VN
             document.getElementById('game-ui').style.display = 'none';
             const vnScreen = document.getElementById('vn-screen');
             vnScreen.style.display = 'flex';
@@ -204,7 +202,6 @@
         }
 
         function advanceNarrative() {
-            // Au clic sur l'entracte, on masque le VN et on passe à l'énigme suivante
             document.getElementById('vn-screen').style.display = 'none';
             document.getElementById('game-ui').style.display = 'flex';
 
@@ -218,7 +215,6 @@
             } else if (currentInterludeKey === 4) {
                 document.getElementById('step5').classList.add('active');
             } else if (currentInterludeKey === 5) {
-                // Victoire finale après la dernière cinématique
                 document.getElementById('sfx-alarm').pause();
                 document.getElementById('alarm-fx').style.display = 'none';
                 clearInterval(timerId);
@@ -230,13 +226,18 @@
             const val = document.getElementById('input' + id).value.trim();
             if (val === correct) {
                 document.getElementById(currentStepId).classList.remove('active');
-                if (!timerStarted) startTimer(); // Lance le chrono dès la première bonne réponse
+                if (!timerStarted) startTimer();
+                
+                // ARRÊT OBLIGATOIRE DU RADAR ICI
+                if (stepNumber === 2) {
+                    clearInterval(radarInterval);
+                }
                 
                 if (stepNumber < 5) {
-                    triggerInterlude(stepNumber); // Lance l'entracte vidéo de transition
+                    triggerInterlude(stepNumber);
                 } else {
                     if(stepNumber === 5) clearInterval(radarInterval);
-                    triggerInterlude(5); // Lance la cinématique finale avant l'écran de succès
+                    triggerInterlude(5);
                 }
             } else {
                 document.getElementById('sfx-glitch').play();
@@ -244,11 +245,6 @@
                 setTimeout(() => document.body.classList.remove('violent-shake'), 300);
             }
         }
-
-        // Démarrage direct sur l'Énigme 1 (le jeu commence immédiatement, les vidéos font office de récompenses d'entracte)
-        window.onload = () => {
-            // Le chrono peut démarrer dès le début ou à la première énigme, ici il s'active au premier succès pour laisser le joueur lire tranquillement.
-        };
 
         let radarAngle = 0;
         let enemyDistance = 120;
