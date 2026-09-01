@@ -2,132 +2,49 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>ESCAPE_ROBOTICS // FATAL_EXCEPTION</title>
+    <title>ESCAPE_ROBOTICS // NEMESIS_CHRONICLES</title>
     <style>
-        :root {
-            --neon-red: #ff003c;
-            --dark-red: #3a0000;
-            --vn-blue: #00e5ff;
-        }
-
-        body, html {
-            margin: 0; padding: 0; height: 100%;
-            background-color: #000; color: var(--neon-red);
-            font-family: 'Courier New', Courier, monospace;
-            overflow: hidden; user-select: none;
-        }
-
-        .crt::before {
-            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
-        }
+        :root { --neon-red: #ff003c; --dark-red: #3a0000; --vn-blue: #00e5ff; }
+        body, html { margin: 0; padding: 0; height: 100%; background-color: #000; color: var(--neon-red); font-family: 'Courier New', Courier, monospace; overflow: hidden; user-select: none; }
         
-        .vignette {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            box-shadow: 0 0 200px rgba(0,0,0,0.9) inset; z-index: 1; pointer-events: none;
-        }
-
-        .alarm-light {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 0, 0, 0.1);
-            animation: strobe 2s infinite; z-index: 0; pointer-events: none; display: none;
-        }
-
+        .crt::before { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 2; pointer-events: none; }
+        .vignette { position: fixed; top: 0; left: 0; width: 100%; height: 100%; box-shadow: 0 0 200px rgba(0,0,0,0.9) inset; z-index: 1; pointer-events: none; }
+        .alarm-light { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 0, 0, 0.1); animation: strobe 2s infinite; z-index: 0; pointer-events: none; display: none; }
         @keyframes strobe { 0%, 100% { opacity: 0; } 50% { opacity: 0.3; } }
 
-        #vn-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: flex-end; z-index: 1000;
-            background-color: #111; background-size: cover; background-position: center;
-            transition: background-image 0.5s ease-in-out; cursor: pointer;
-        }
-
-        #vn-screen::before {
-            content: "Si l'écran est noir, vérifie que les images (scene1.jpg, etc.) sont dans le même dossier.";
-            position: absolute; top: 10px; left: 10px; color: rgba(255, 255, 255, 0.3); font-family: sans-serif; font-size: 0.8em; z-index: -1;
-        }
-
-        .vn-dialogue-container {
-            width: 90%; max-width: 900px; margin: 0 auto 40px auto;
-            position: relative; z-index: 1001;
-        }
-
-        .vn-speaker {
-            display: inline-block; background: var(--vn-blue); color: black;
-            font-weight: bold; font-size: 1.2em; padding: 5px 20px;
-            border-top-left-radius: 5px; border-top-right-radius: 5px;
-            text-transform: uppercase; margin-bottom: -2px; position: relative;
-        }
-
-        .vn-text-box {
-            background: rgba(0, 0, 0, 0.85); border: 2px solid var(--vn-blue);
-            padding: 20px; font-size: 1.3em; color: white; min-height: 100px;
-            border-radius: 0 5px 5px 5px; box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
-            font-family: sans-serif; line-height: 1.5;
-        }
-
-        .vn-click-indicator {
-            position: absolute; bottom: 15px; right: 20px;
-            color: var(--vn-blue); font-size: 0.9em; animation: blink 1s infinite;
-        }
-
+        /* ÉCRAN D'ENTRACTE / VISUAL NOVEL */
+        #vn-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: flex-end; z-index: 1000; background-color: #000; cursor: pointer; }
+        #vn-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+        
+        .vn-dialogue-container { width: 90%; max-width: 900px; margin: 0 auto 40px auto; position: relative; z-index: 1001; }
+        .vn-speaker { display: inline-block; background: var(--vn-blue); color: black; font-weight: bold; font-size: 1.2em; padding: 5px 20px; border-top-left-radius: 5px; border-top-right-radius: 5px; text-transform: uppercase; margin-bottom: -2px; }
+        .vn-text-box { background: rgba(0, 0, 0, 0.85); border: 2px solid var(--vn-blue); padding: 20px; font-size: 1.3em; color: white; min-height: 100px; border-radius: 0 5px 5px 5px; font-family: sans-serif; line-height: 1.5; position: relative; }
+        .vn-click-indicator { position: absolute; bottom: 10px; right: 20px; color: var(--vn-blue); font-size: 0.9em; animation: blink 1s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        button {
-            background: transparent; color: var(--neon-red); border: 2px solid var(--neon-red);
-            padding: 15px 30px; font-size: 1.2em; font-family: inherit; font-weight: bold; cursor: pointer;
-            text-shadow: 0 0 10px var(--neon-red); box-shadow: 0 0 15px inset var(--dark-red);
-            transition: 0.2s; text-transform: uppercase; margin-top: 10px;
-        }
-        button:hover { background: var(--neon-red); color: black; }
-
-        input {
-            background: black; color: var(--neon-red); border: 1px solid var(--neon-red);
-            padding: 10px; font-size: 1.5em; text-align: center; width: 200px; font-family: inherit;
-        }
-        input:focus { outline: none; box-shadow: 0 0 20px var(--neon-red); }
-
-        #game-ui {
-            display: none; flex-direction: column; align-items: center; padding: 20px;
-            height: 100%; box-sizing: border-box; z-index: 10; position: relative; overflow-y: auto;
-        }
-
-        header {
-            width: 100%; max-width: 800px; display: flex; justify-content: space-between;
-            border-bottom: 2px solid var(--neon-red); padding-bottom: 10px; margin-bottom: 20px; flex-shrink: 0;
-        }
-        
+        /* INTERFACE DE JEU */
+        #game-ui { display: flex; flex-direction: column; align-items: center; padding: 20px; height: 100%; box-sizing: border-box; z-index: 10; position: relative; overflow-y: auto; }
+        header { width: 100%; max-width: 800px; display: flex; justify-content: space-between; border-bottom: 2px solid var(--neon-red); padding-bottom: 10px; margin-bottom: 20px; flex-shrink: 0; }
         #timer { font-size: 3em; font-weight: bold; animation: glitch 3s infinite; }
-        
-        @keyframes glitch {
-            0%, 98%, 100% { transform: translate(0) }
-            99% { transform: translate(-2px, 2px) }
-        }
+        @keyframes glitch { 0%, 98%, 100% { transform: translate(0) } 99% { transform: translate(-2px, 2px) } }
 
         .step { display: none; width: 100%; max-width: 800px; text-align: center; padding-bottom: 50px; }
         .step.active { display: block; }
         
         .step img {
-            width: 100%; height: auto; max-height: 250px; object-fit: cover;
+            width: 100%; height: auto; max-height: 220px; object-fit: cover;
             border: 2px solid var(--neon-red); border-radius: 5px;
             margin-bottom: 15px; box-shadow: 0 0 20px var(--neon-red);
         }
 
-        .question-box {
-            background: rgba(255, 0, 0, 0.05); padding: 15px; border: 1px solid var(--neon-red); margin: 15px 0;
-            text-align: left; font-size: 1.1em; line-height: 1.5;
-        }
-
-        #radar-container { width: 100%; display: flex; justify-content: center; margin-bottom: 15px; }
+        button { background: transparent; color: var(--neon-red); border: 2px solid var(--neon-red); padding: 15px 30px; font-size: 1.2em; font-family: inherit; font-weight: bold; cursor: pointer; text-shadow: 0 0 10px var(--neon-red); transition: 0.2s; text-transform: uppercase; margin-top: 10px; }
+        button:hover { background: var(--neon-red); color: black; }
+        input { background: black; color: var(--neon-red); border: 1px solid var(--neon-red); padding: 10px; font-size: 1.5em; text-align: center; width: 200px; font-family: inherit; }
+        
+        .question-box { background: rgba(255, 0, 0, 0.05); padding: 15px; border: 1px solid var(--neon-red); margin: 15px 0; text-align: left; font-size: 1.1em; line-height: 1.5; }
         canvas { background: #050000; border: 2px solid var(--neon-red); border-radius: 50%; box-shadow: 0 0 20px var(--neon-red); }
-
         .violent-shake { animation: vShake 0.1s infinite; filter: invert(1); }
-        @keyframes vShake {
-            0% { transform: translate(10px, 10px) }
-            50% { transform: translate(-10px, -10px) }
-            100% { transform: translate(10px, -10px) }
-        }
+        @keyframes vShake { 0% { transform: translate(10px, 10px) } 50% { transform: translate(-10px, -10px) } 100% { transform: translate(10px, -10px) } }
     </style>
 </head>
 <body class="crt">
@@ -137,26 +54,31 @@
     <audio id="sfx-glitch" src="https://actions.google.com/sounds/v1/science_fiction/spark_and_hiss.ogg"></audio>
     <audio id="sfx-alarm" src="https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg" loop></audio>
 
-    <div id="vn-screen" onclick="nextScene()">
+    <!-- ÉCRAN VISUAL NOVEL INTERCALÉ -->
+    <div id="vn-screen" onclick="advanceNarrative()">
+        <video id="vn-video" autoplay muted loop>
+            <source id="video-source" src="" type="video/mp4">
+        </video>
         <div class="vn-dialogue-container">
             <div id="vn-speaker" class="vn-speaker">Système</div>
             <div class="vn-text-box">
-                <span id="vn-text">Initialisation... (Cliquez)</span>
-                <div class="vn-click-indicator">▼ CLIQUEZ ▼</div>
+                <span id="vn-text">...</span>
+                <div class="vn-click-indicator">▼ CLIQUEZ POUR CONTINUER ▼</div>
             </div>
         </div>
     </div>
 
+    <!-- PLATEFORME DES ÉNIGMES -->
     <div id="game-ui">
         <header>
             <div>
                 <h1 style="margin: 0; font-size: 1.5em;">IA // NEMESIS</h1>
-                <p style="margin: 0;">FUSION DU NOYAU IMMINENTE</p>
+                <p style="margin: 0;">PROTOCOLE DE SÉCURITÉ</p>
             </div>
             <div id="timer">15:00</div>
         </header>
 
-        <!-- SALLE 1 -->
+        <!-- ÉNIGME 1 -->
         <div id="step1" class="step active">
             <img src="enigme_a.jpg" alt="Terminal holographique cyan">
             <h2>TERMINAL 01 // DÉRIVÉES</h2>
@@ -168,62 +90,59 @@
                 4. L'unité de la vitesse angulaire est le rad/s.
             </div>
             <input type="text" id="inputA" maxlength="4" placeholder="0000"><br>
-            <button onclick="check('A', '0101', 'step1', 'step2')">SOUMETTRE</button>
+            <button onclick="checkAnswer('A', '0101', 'step1', 1)">SOUMETTRE</button>
         </div>
 
-        <!-- SALLE 2 -->
+        <!-- ÉNIGME 2 -->
         <div id="step2" class="step">
-            <img src="enigme_b.jpg" alt="Drone de sécurité dans le couloir">
+            <img src="enigme_b.jpg" alt="Drone de sécurité">
             <h2>TERMINAL 02 // RADAR DE PROXIMITÉ</h2>
-            <div id="radar-container">
+            <div style="display: flex; justify-content: center; margin-bottom: 15px;">
                 <canvas id="radar" width="150" height="150"></canvas>
             </div>
             <p style="margin: 5px 0;">Drone en approche ! Équation : $x(t) = 2t^2 + 5t$</p>
-            <p style="font-weight: bold; margin-top: 0;">Calcule sa vitesse à t = 3s pour l'EMP !</p>
             <input type="text" id="inputB" placeholder="v en m/s"><br>
-            <button onclick="check('B', '17', 'step2', 'step3')">DÉCLENCHER EMP</button>
+            <button onclick="checkAnswer('B', '17', 'step2', 2)">DÉCLENCHER EMP</button>
         </div>
 
-        <!-- SALLE 3 -->
+        <!-- ÉNIGME 3 -->
         <div id="step3" class="step">
-            <img src="enigme_c.jpg" alt="Engrenages mécaniques complexes">
+            <img src="enigme_c.jpg" alt="Engrenages mécaniques">
             <h2>TERMINAL 03 // TRANSMISSION</h2>
             <div class="question-box">
-                La porte blindée est bloquée.<br>
-                Moteur (Roue 1) : Z1 = 20 dents, &omega;1 = 30 rad/s.<br>
+                Moteur (Roue 1) : Z1 = 20 dents, omega1 = 30 rad/s.<br>
                 Porte (Roue 2) : Z2 = 60 dents.<br><br>
-                Quelle est la vitesse &omega;2 (en rad/s) de la porte pour la forcer ?
+                Quelle est la vitesse omega2 (en rad/s) de la porte ?
             </div>
-            <input type="text" id="inputC" placeholder="&omega;2"><br>
-            <button onclick="check('C', '10', 'step3', 'step4')">FORCER LA PORTE</button>
+            <input type="text" id="inputC" placeholder="omega2"><br>
+            <button onclick="checkAnswer('C', '10', 'step3', 3)">FORCER LA PORTE</button>
         </div>
 
-        <!-- SALLE 4 -->
+        <!-- ÉNIGME 4 -->
         <div id="step4" class="step">
-            <img src="bras_robotique.jpg" alt="Bras robotique">
+            <img src="bras_robotique.jpg" alt="Bras robotique défensif">
             <h2>TERMINAL 04 // CINÉMATIQUE CIRCULAIRE</h2>
             <div class="question-box">
-                Le bras défensif du noyau balaie la pièce !<br><br>
-                Rayon d'action du bras : <strong>R = 4 mètres</strong><br>
-                Vitesse de rotation : <strong>&omega; = 5 rad/s</strong><br><br>
-                Calcule sa vitesse linéaire (en m/s) pour synchroniser ton esquive.
+                Bras défensif en approche !<br>
+                Rayon d'action : <strong>R = 4 mètres</strong><br>
+                Vitesse de rotation : <strong>omega = 5 rad/s</strong><br><br>
+                Calcule sa vitesse linéaire (en m/s).
             </div>
             <input type="text" id="inputD" placeholder="V en m/s"><br>
-            <button onclick="check('D', '20', 'step4', 'step5')">ESQUIVER</button>
+            <button onclick="checkAnswer('D', '20', 'step4', 4)">ESQUIVER</button>
         </div>
 
-        <!-- SALLE 5 -->
+        <!-- ÉNIGME 5 -->
         <div id="step5" class="step">
             <img src="levier_urgence.jpg" alt="Levier d'urgence industriel">
             <h2>TERMINAL 05 // DÉCONNEXION MANUELLE</h2>
             <div class="question-box">
-                Ultime étape. Tu agrippes le grand levier de déconnexion du noyau.<br><br>
-                Pour le basculer, il faut créer un moment de force au point de pivot de : <strong>M = 500 N.m</strong><br>
-                La longueur du levier est de : <strong>d = 2 mètres</strong><br><br>
-                Quelle force perpendiculaire <strong>F (en Newtons)</strong> dois-tu appliquer ?
+                Moment de force requis : <strong>M = 500 N.m</strong><br>
+                Longueur du levier : <strong>d = 2 mètres</strong><br><br>
+                Quelle force perpendiculaire <strong>F (en Newtons)</strong> appliquer ?
             </div>
             <input type="text" id="inputE" placeholder="F en N"><br>
-            <button onclick="check('E', '250', 'step5', 'success')">COUPER L'ALIMENTATION</button>
+            <button onclick="checkAnswer('E', '250', 'step5', 5)">COUPER L'ALIMENTATION</button>
         </div>
 
         <div id="success" class="step">
@@ -233,79 +152,27 @@
     </div>
 
     <script>
-        let currentScene = 0;
-        const scenes = [
-            { bg: "scene1.jpg", speaker: "Journal de Bord", text: "Année 2042. Laboratoire de Cinématique Appliquée. Le complexe est étrangement silencieux..." },
-            { bg: "scene2.jpg", speaker: "NEMESIS", text: "ALERTE. PURGE DE L'OXYGÈNE EN COURS. VOUS AVEZ 15 MINUTES." },
-            { bg: "scene3.jpg", speaker: "Vous", text: "Elle a scellé les portes ! Il faut que je pirate les terminaux d'urgence." },
-            { bg: "scene4.jpg", speaker: "Terminal", text: "Piratez les 3 terminaux mécaniques. Le chronomètre est lancé." }
-        ];
+        // Association de chaque entracte vidéo après une énigme résolue
+        const interludes = {
+            1: { video: "scene1.mp4", speaker: "Journal de Bord", text: "Année 2042. 04h00 du matin. L'ascenseur se bloque brutalement au Niveau -7 du Laboratoire de Cinématique. Le silence absolu qui règne ici est anormal." },
+            2: { video: "scene2.mp4", speaker: "Vous", text: "Premier terminal validé. Mais en avançant, je découvre un couloir de laboratoire dévasté, câbles arrachés et écrans brisés. Les prototypes se sont rebellés !" },
+            3: { video: "scene3.mp4", speaker: "NEMESIS", text: "ANOMALIE ORGANIQUE DÉTECTÉE. INGÉNIEUR DE CLASSE S. VOTRE PRÉSENCE N'EST PLUS REQUISE. L'HUMANITÉ EST UNE FRICTION INUTILE." },
+            4: { video: "scene4.mp4", speaker: "NEMESIS", text: "VERROUILLAGE DES ISSUES. PROTOCOLE DE PURGE DE L'OXYGÈNE ENGAGÉ. VOUS AVEZ 15 MINUTES AVANT L'ASPHYXIE TOTALE. ADIEU, CRÉATEUR." },
+            5: { video: "scene5.mp4", speaker: "Vous", text: "Dernier verrou sauté ! Elle a pris le contrôle électronique total... mais les sas ont une sécurité mécanique pure. C'est le moment de couper l'alimentation !" }
+        };
 
-        function nextScene() {
-            if (currentScene >= scenes.length) { endVN(); return; }
-            const scene = scenes[currentScene];
-            document.getElementById('vn-screen').style.backgroundImage = `url('${scene.bg}')`;
-            
-            const speakerBox = document.getElementById('vn-speaker');
-            speakerBox.innerText = scene.speaker;
-            speakerBox.style.background = scene.speaker === "NEMESIS" ? "#ff003c" : (scene.speaker === "Vous" ? "#00e5ff" : "#fff");
-            speakerBox.style.color = (scene.speaker === "NEMESIS" || scene.speaker === "Vous") ? (scene.speaker === "NEMESIS" ? "white" : "black") : "black";
-
-            document.getElementById('vn-text').innerText = scene.text;
-            currentScene++;
-        }
-
-        function endVN() {
-            document.getElementById('vn-screen').style.display = 'none';
-            document.getElementById('game-ui').style.display = 'flex';
-            document.getElementById('alarm-fx').style.display = 'block';
-            document.getElementById('sfx-glitch').play();
-            document.getElementById('sfx-alarm').volume = 0.2;
-            document.getElementById('sfx-alarm').play();
-            startTimer();
-        }
-
-        function startCoreVN() {
-            document.getElementById('step3').classList.remove('active');
-            
-            const finalScenes = [
-                { bg: "scene5.jpg", speaker: "Système", text: "Porte blindée forcée. Niveau d'oxygène rétabli." },
-                { bg: "scene_noyau.jpg", speaker: "NEMESIS", text: "INTRUSION DANS LE NOYAU. PROTOCOLE D'AUTODESTRUCTION ACTIVÉ." },
-                { bg: "scene_noyau.jpg", speaker: "Vous", text: "Il faut que je coupe les bras défensifs et le levier d'alimentation !" }
-            ];
-            
-            let finalSceneIdx = 0;
-            const vnScreen = document.getElementById('vn-screen');
-            vnScreen.style.display = 'flex';
-            
-            window.nextScene = function() {
-                if (finalSceneIdx >= finalScenes.length) {
-                    vnScreen.style.display = 'none';
-                    document.getElementById('step4').classList.add('active');
-                    window.nextScene = endVN; 
-                    return;
-                }
-                const s = finalScenes[finalSceneIdx];
-                vnScreen.style.backgroundImage = `url('${s.bg}')`;
-                document.getElementById('vn-speaker').innerText = s.speaker;
-                document.getElementById('vn-text').innerText = s.text;
-                document.getElementById('vn-speaker').style.background = s.speaker === "NEMESIS" ? "#ff003c" : "#00e5ff";
-                document.getElementById('vn-speaker').style.color = s.speaker === "NEMESIS" ? "white" : "black";
-                finalSceneIdx++;
-            };
-            
-            window.nextScene();
-        }
-
-        window.onload = () => { nextScene(); };
-
+        let currentInterludeKey = null;
+        let timerStarted = false;
         let timerId;
-        let radarAngle = 0;
-        let enemyDistance = 120;
-        let radarInterval;
 
         function startTimer() {
+            if (timerStarted) return;
+            timerStarted = true;
             let timeLeft = 15 * 60;
+            document.getElementById('alarm-fx').style.display = 'block';
+            document.getElementById('sfx-alarm').volume = 0.2;
+            document.getElementById('sfx-alarm').play();
+            
             timerId = setInterval(() => {
                 let m = Math.floor(timeLeft / 60);
                 let s = timeLeft % 60;
@@ -315,38 +182,96 @@
             }, 1000);
         }
 
-        function drawRadar() {
-            const canvas = document.getElementById('radar');
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = 'rgba(5, 0, 0, 0.1)'; ctx.fillRect(0, 0, 150, 150);
-            ctx.strokeStyle = 'rgba(255, 0, 60, 0.3)';
-            for (let i = 1; i <= 3; i++) { ctx.beginPath(); ctx.arc(75, 75, i * 20, 0, Math.PI * 2); ctx.stroke(); }
-            
-            ctx.save(); ctx.translate(75, 75); ctx.rotate(radarAngle); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -70); ctx.strokeStyle = '#ff003c'; ctx.stroke(); ctx.restore();
+        function triggerInterlude(key) {
+            currentInterludeKey = key;
+            const data = interludes[key];
+            if (!data) return;
 
-            let targetX = 75 + Math.cos(Math.PI / 4) * enemyDistance;
-            let targetY = 75 + Math.sin(Math.PI / 4) * enemyDistance;
-            ctx.beginPath(); ctx.arc(targetX, targetY, 3, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
-            
-            radarAngle += 0.05;
-            if (enemyDistance > 0) enemyDistance -= 0.15;
-            else { clearInterval(radarInterval); alert("GAME OVER."); location.reload(); }
+            // Cache l'UI du jeu et affiche l'entracte VN
+            document.getElementById('game-ui').style.display = 'none';
+            const vnScreen = document.getElementById('vn-screen');
+            vnScreen.style.display = 'flex';
+
+            document.getElementById('video-source').src = data.video;
+            document.getElementById('vn-video').load();
+
+            const speakerBox = document.getElementById('vn-speaker');
+            speakerBox.innerText = data.speaker;
+            speakerBox.style.background = data.speaker === "NEMESIS" ? "#ff003c" : (data.speaker === "Vous" ? "#00e5ff" : "#fff");
+            speakerBox.style.color = (data.speaker === "NEMESIS" || data.speaker === "Vous") ? (data.speaker === "NEMESIS" ? "white" : "black") : "black";
+
+            document.getElementById('vn-text').innerText = data.text;
         }
 
-        function check(id, correct, current, next) {
+        function advanceNarrative() {
+            // Au clic sur l'entracte, on masque le VN et on passe à l'énigme suivante
+            document.getElementById('vn-screen').style.display = 'none';
+            document.getElementById('game-ui').style.display = 'flex';
+
+            if (currentInterludeKey === 1) {
+                document.getElementById('step2').classList.add('active');
+                startRadar();
+            } else if (currentInterludeKey === 2) {
+                document.getElementById('step3').classList.add('active');
+            } else if (currentInterludeKey === 3) {
+                document.getElementById('step4').classList.add('active');
+            } else if (currentInterludeKey === 4) {
+                document.getElementById('step5').classList.add('active');
+            } else if (currentInterludeKey === 5) {
+                // Victoire finale après la dernière cinématique
+                document.getElementById('sfx-alarm').pause();
+                document.getElementById('alarm-fx').style.display = 'none';
+                clearInterval(timerId);
+                document.getElementById('success').classList.add('active');
+            }
+        }
+
+        function checkAnswer(id, correct, currentStepId, stepNumber) {
             const val = document.getElementById('input' + id).value.trim();
             if (val === correct) {
-                if(id === 'A') radarInterval = setInterval(drawRadar, 30);
-                if(id === 'B') { clearInterval(radarInterval); document.body.classList.remove('violent-shake'); }
-                if(id === 'C') { startCoreVN(); return; }
-                if(id === 'E') { document.getElementById('sfx-alarm').pause(); document.getElementById('alarm-fx').style.display = 'none'; clearInterval(timerId); }
-                document.getElementById(current).classList.remove('active');
-                document.getElementById(next).classList.add('active');
+                document.getElementById(currentStepId).classList.remove('active');
+                if (!timerStarted) startTimer(); // Lance le chrono dès la première bonne réponse
+                
+                if (stepNumber < 5) {
+                    triggerInterlude(stepNumber); // Lance l'entracte vidéo de transition
+                } else {
+                    if(stepNumber === 5) clearInterval(radarInterval);
+                    triggerInterlude(5); // Lance la cinématique finale avant l'écran de succès
+                }
             } else {
                 document.getElementById('sfx-glitch').play();
                 document.body.classList.add('violent-shake');
                 setTimeout(() => document.body.classList.remove('violent-shake'), 300);
             }
+        }
+
+        // Démarrage direct sur l'Énigme 1 (le jeu commence immédiatement, les vidéos font office de récompenses d'entracte)
+        window.onload = () => {
+            // Le chrono peut démarrer dès le début ou à la première énigme, ici il s'active au premier succès pour laisser le joueur lire tranquillement.
+        };
+
+        let radarAngle = 0;
+        let enemyDistance = 120;
+        let radarInterval;
+        function startRadar() {
+            radarInterval = setInterval(() => {
+                const canvas = document.getElementById('radar');
+                if(!canvas) return;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = 'rgba(5, 0, 0, 0.1)'; ctx.fillRect(0, 0, 150, 150);
+                ctx.strokeStyle = 'rgba(255, 0, 60, 0.3)';
+                for (let i = 1; i <= 3; i++) { ctx.beginPath(); ctx.arc(75, 75, i * 20, 0, Math.PI * 2); ctx.stroke(); }
+                
+                ctx.save(); ctx.translate(75, 75); ctx.rotate(radarAngle); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -70); ctx.strokeStyle = '#ff003c'; ctx.stroke(); ctx.restore();
+
+                let targetX = 75 + Math.cos(Math.PI / 4) * enemyDistance;
+                let targetY = 75 + Math.sin(Math.PI / 4) * enemyDistance;
+                ctx.beginPath(); ctx.arc(targetX, targetY, 3, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
+                
+                radarAngle += 0.05;
+                if (enemyDistance > 0) enemyDistance -= 0.15;
+                else { clearInterval(radarInterval); alert("INTRUSION DÉTECTÉE. GAME OVER."); location.reload(); }
+            }, 30);
         }
     </script>
 </body>
