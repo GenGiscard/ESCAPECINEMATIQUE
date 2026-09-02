@@ -2,49 +2,126 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>ESCAPE_ROBOTICS // NEMESIS_CHRONICLES</title>
+    <title>ESCAPE_ROBOTICS // VISUAL NOVEL EDITION</title>
     <style>
-        :root { --neon-red: #ff003c; --dark-red: #3a0000; --vn-blue: #00e5ff; }
-        body, html { margin: 0; padding: 0; height: 100%; background-color: #000; color: var(--neon-red); font-family: 'Courier New', Courier, monospace; overflow: hidden; user-select: none; }
-        
-        .crt::before { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 2; pointer-events: none; }
-        .vignette { position: fixed; top: 0; left: 0; width: 100%; height: 100%; box-shadow: 0 0 200px rgba(0,0,0,0.9) inset; z-index: 1; pointer-events: none; }
-        .alarm-light { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 0, 0, 0.1); animation: strobe 2s infinite; z-index: 0; pointer-events: none; display: none; }
-        @keyframes strobe { 0%, 100% { opacity: 0; } 50% { opacity: 0.3; } }
+        :root {
+            --neon-red: #ff003c;
+            --dark-red: #3a0000;
+            --vn-blue: #00e5ff;
+            --bg-dark: #080202;
+        }
 
-        /* ÉCRAN D'ENTRACTE / VISUAL NOVEL */
-        #vn-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: flex-end; z-index: 1000; background-color: #000; cursor: pointer; }
-        #vn-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
-        
-        .vn-dialogue-container { width: 90%; max-width: 900px; margin: 0 auto 40px auto; position: relative; z-index: 1001; }
-        .vn-speaker { display: inline-block; background: var(--vn-blue); color: black; font-weight: bold; font-size: 1.2em; padding: 5px 20px; border-top-left-radius: 5px; border-top-right-radius: 5px; text-transform: uppercase; margin-bottom: -2px; }
-        .vn-text-box { background: rgba(0, 0, 0, 0.85); border: 2px solid var(--vn-blue); padding: 20px; font-size: 1.3em; color: white; min-height: 100px; border-radius: 0 5px 5px 5px; font-family: sans-serif; line-height: 1.5; position: relative; }
-        .vn-click-indicator { position: absolute; bottom: 10px; right: 20px; color: var(--vn-blue); font-size: 0.9em; animation: blink 1s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            background-color: var(--bg-dark); color: var(--neon-red);
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden; user-select: none;
+        }
 
-        /* INTERFACE DE JEU */
-        #game-ui { display: flex; flex-direction: column; align-items: center; padding: 20px; height: 100%; box-sizing: border-box; z-index: 10; position: relative; overflow-y: auto; }
-        header { width: 100%; max-width: 800px; display: flex; justify-content: space-between; border-bottom: 2px solid var(--neon-red); padding-bottom: 10px; margin-bottom: 20px; flex-shrink: 0; }
-        #timer { font-size: 3em; font-weight: bold; animation: glitch 3s infinite; }
+        /* Effet CRT & Vignette */
+        .crt::before {
+            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.04));
+            z-index: 99; background-size: 100% 2px, 3px 100%; pointer-events: none;
+        }
+        .vignette {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: 0 0 150px rgba(0,0,0,0.95) inset; z-index: 98; pointer-events: none;
+        }
+
+        .alarm-light {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 0, 0, 0.08); animation: strobe 2.5s infinite;
+            z-index: 1; pointer-events: none; display: none;
+        }
+        @keyframes strobe { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+
+        /* --- MOTEUR VISUAL NOVEL (DIALOGUES & SCÈNES) --- */
+        #vn-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            z-index: 100; background-color: #000; background-size: cover; background-position: center;
+            cursor: pointer; transition: background-image 0.4s ease-in-out;
+        }
+
+        .vn-dialogue-container {
+            width: 90%; max-width: 950px; margin: 0 auto 35px auto;
+            position: relative; z-index: 101;
+        }
+
+        .vn-speaker {
+            display: inline-block; background: var(--vn-blue); color: black;
+            font-weight: bold; font-size: 1.2em; padding: 6px 22px;
+            border-top-left-radius: 6px; border-top-right-radius: 6px;
+            text-transform: uppercase; margin-bottom: -2px; letter-spacing: 1px;
+        }
+
+        .vn-text-box {
+            background: rgba(5, 5, 8, 0.92); border: 2px solid var(--vn-blue);
+            padding: 25px; font-size: 1.3em; color: #f0f0f0; min-height: 110px;
+            border-radius: 0 8px 8px 8px; box-shadow: 0 0 25px rgba(0, 229, 255, 0.2);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6;
+            position: relative;
+        }
+
+        .vn-click-hint {
+            position: absolute; bottom: 12px; right: 20px;
+            color: var(--vn-blue); font-size: 0.85em; font-family: monospace;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+        /* --- INTERFACE DE JEU (ÉNIGMES) --- */
+        #game-ui {
+            display: none; flex-direction: column; align-items: center; padding: 20px;
+            height: 100%; box-sizing: border-box; z-index: 10; position: relative; overflow-y: auto;
+        }
+
+        header {
+            width: 100%; max-width: 800px; display: flex; justify-content: space-between;
+            border-bottom: 2px solid var(--neon-red); padding-bottom: 10px; margin-bottom: 20px; flex-shrink: 0;
+        }
+        
+        #timer { font-size: 2.8em; font-weight: bold; animation: glitch 3s infinite; text-shadow: 0 0 10px var(--neon-red); }
         @keyframes glitch { 0%, 98%, 100% { transform: translate(0) } 99% { transform: translate(-2px, 2px) } }
 
-        .step { display: none; width: 100%; max-width: 800px; text-align: center; padding-bottom: 50px; }
+        .step { display: none; width: 100%; max-width: 800px; text-align: center; padding-bottom: 40px; }
         .step.active { display: block; }
         
         .step img {
-            width: 100%; height: auto; max-height: 220px; object-fit: cover;
-            border: 2px solid var(--neon-red); border-radius: 5px;
-            margin-bottom: 15px; box-shadow: 0 0 20px var(--neon-red);
+            width: 100%; height: auto; max-height: 240px; object-fit: cover;
+            border: 2px solid var(--neon-red); border-radius: 6px;
+            margin-bottom: 15px; box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
         }
 
-        button { background: transparent; color: var(--neon-red); border: 2px solid var(--neon-red); padding: 15px 30px; font-size: 1.2em; font-family: inherit; font-weight: bold; cursor: pointer; text-shadow: 0 0 10px var(--neon-red); transition: 0.2s; text-transform: uppercase; margin-top: 10px; }
-        button:hover { background: var(--neon-red); color: black; }
-        input { background: black; color: var(--neon-red); border: 1px solid var(--neon-red); padding: 10px; font-size: 1.5em; text-align: center; width: 200px; font-family: inherit; }
-        
-        .question-box { background: rgba(255, 0, 0, 0.05); padding: 15px; border: 1px solid var(--neon-red); margin: 15px 0; text-align: left; font-size: 1.1em; line-height: 1.5; }
-        canvas { background: #050000; border: 2px solid var(--neon-red); border-radius: 50%; box-shadow: 0 0 20px var(--neon-red); }
+        button {
+            background: transparent; color: var(--neon-red); border: 2px solid var(--neon-red);
+            padding: 12px 28px; font-size: 1.1em; font-family: inherit; font-weight: bold; cursor: pointer;
+            text-shadow: 0 0 8px var(--neon-red); box-shadow: 0 0 10px inset var(--dark-red);
+            transition: 0.2s; text-transform: uppercase; margin-top: 15px;
+        }
+        button:hover { background: var(--neon-red); color: black; box-shadow: 0 0 20px var(--neon-red); }
+
+        input {
+            background: black; color: var(--neon-red); border: 2px solid var(--neon-red);
+            padding: 10px; font-size: 1.4em; text-align: center; width: 220px; font-family: inherit;
+            border-radius: 4px;
+        }
+        input:focus { outline: none; box-shadow: 0 0 15px var(--neon-red); }
+
+        .question-box {
+            background: rgba(255, 0, 0, 0.04); padding: 18px; border: 1px solid var(--neon-red);
+            margin: 15px 0; text-align: left; font-size: 1.05em; line-height: 1.6; border-radius: 4px;
+        }
+
+        canvas { background: #020000; border: 2px solid var(--neon-red); border-radius: 50%; box-shadow: 0 0 20px var(--neon-red); }
+
         .violent-shake { animation: vShake 0.1s infinite; filter: invert(1); }
-        @keyframes vShake { 0% { transform: translate(10px, 10px) } 50% { transform: translate(-10px, -10px) } 100% { transform: translate(10px, -10px) } }
+        @keyframes vShake {
+            0% { transform: translate(8px, 8px) }
+            50% { transform: translate(-8px, -8px) }
+            100% { transform: translate(8px, -8px) }
+        }
     </style>
 </head>
 <body class="crt">
@@ -54,68 +131,67 @@
     <audio id="sfx-glitch" src="https://actions.google.com/sounds/v1/science_fiction/spark_and_hiss.ogg"></audio>
     <audio id="sfx-alarm" src="https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg" loop></audio>
 
-    <!-- ÉCRAN VISUAL NOVEL INTERCALÉ -->
-    <div id="vn-screen" onclick="advanceNarrative()">
-        <video id="vn-video" autoplay muted loop>
-            <source id="video-source" src="" type="video/mp4">
-        </video>
+    <!-- ÉCRAN VISUAL NOVEL (INTRO & ENTRACTES) -->
+    <div id="vn-screen" onclick="handleVNClick()">
         <div class="vn-dialogue-container">
             <div id="vn-speaker" class="vn-speaker">Système</div>
             <div class="vn-text-box">
-                <span id="vn-text">...</span>
-                <div class="vn-click-indicator">▼ CLIQUEZ POUR CONTINUER ▼</div>
+                <span id="vn-text">Initialisation du système mémoriel... (Cliquez pour avancer)</span>
+                <div class="vn-click-hint">▼ CLIQUER POUR CONTINUER ▼</div>
             </div>
         </div>
     </div>
 
-    <!-- PLATEFORME DES ÉNIGMES -->
+    <!-- PLATEFORME DES ÉNIGMES DU JEU -->
     <div id="game-ui">
         <header>
             <div>
-                <h1 style="margin: 0; font-size: 1.5em;">IA // NEMESIS</h1>
-                <p style="margin: 0;">PROTOCOLE DE SÉCURITÉ</p>
+                <h1 style="margin: 0; font-size: 1.4em;">IA // NEMESIS</h1>
+                <p style="margin: 0; font-size: 0.9em; color: #aaa;">SECTEUR DE CINÉMATIQUE APPLIQUÉE</p>
             </div>
             <div id="timer">15:00</div>
         </header>
 
         <!-- ÉNIGME 1 -->
-        <div id="step1" class="step active">
-            <img src="enigme_a.jpg" alt="Terminal holographique cyan">
-            <h2>TERMINAL 01 // DÉRIVÉES</h2>
+        <div id="step1" class="step">
+            <img src="enigme_a.jpg" alt="Terminal holographique">
+            <h2>TERMINAL 01 // DÉRIVÉES CINÉMATIQUES</h2>
             <div class="question-box">
-                Code binaire (Vrai=1, Faux=0) :<br><br>
+                Analyse des lois fondamentales du mouvement. Entrez le code binaire (Vrai=1, Faux=0) :<br><br>
                 1. La dérivée du vecteur position donne l'accélération.<br>
                 2. En translation, tous les points ont la même vitesse.<br>
                 3. Accélération nulle = mouvement uniformément varié.<br>
                 4. L'unité de la vitesse angulaire est le rad/s.
             </div>
             <input type="text" id="inputA" maxlength="4" placeholder="0000"><br>
-            <button onclick="checkAnswer('A', '0101', 'step1', 1)">SOUMETTRE</button>
+            <button onclick="checkAnswer('A', '0101', 'step1', 1)">SOUMETTRE LE CODE</button>
         </div>
 
         <!-- ÉNIGME 2 -->
         <div id="step2" class="step">
             <img src="enigme_b.jpg" alt="Drone de sécurité">
             <h2>TERMINAL 02 // RADAR DE PROXIMITÉ</h2>
-            <div style="display: flex; justify-content: center; margin-bottom: 15px;">
-                <canvas id="radar" width="150" height="150"></canvas>
+            <div style="display: flex; justify-content: center; margin-bottom: 12px;">
+                <canvas id="radar" width="140" height="140"></canvas>
             </div>
-            <p style="margin: 5px 0;">Drone en approche ! Équation : $x(t) = 2t^2 + 5t$</p>
+            <p style="margin: 4px 0; font-size: 1.1em;">Drone de combat en approche ! Équation de position : $x(t) = 2t^2 + 5t$</p>
+            <p style="margin: 0 0 10px 0; font-weight: bold;">Calcule sa vitesse instantanée à t = 3s pour déployer l'EMP.</p>
             <input type="text" id="inputB" placeholder="v en m/s"><br>
-            <button onclick="checkAnswer('B', '17', 'step2', 2)">DÉCLENCHER EMP</button>
+            <button onclick="checkAnswer('B', '17', 'step2', 2)">DÉCLENCHER L'EMP</button>
         </div>
 
         <!-- ÉNIGME 3 -->
         <div id="step3" class="step">
             <img src="enigme_c.jpg" alt="Engrenages mécaniques">
-            <h2>TERMINAL 03 // TRANSMISSION</h2>
+            <h2>TERMINAL 03 // TRANSMISSION DE PUISSANCE</h2>
             <div class="question-box">
-                Moteur (Roue 1) : Z1 = 20 dents, omega1 = 30 rad/s.<br>
-                Porte (Roue 2) : Z2 = 60 dents.<br><br>
-                Quelle est la vitesse omega2 (en rad/s) de la porte ?
+                Le système de transmission est bloqué par l'IA.<br>
+                Roue motrice (1) : Z1 = 20 dents, $\omega_1$ = 30 rad/s.<br>
+                Roue réceptrice porte (2) : Z2 = 60 dents.<br><br>
+                Quelle est la vitesse de rotation $\omega_2$ (en rad/s) de la porte ?
             </div>
-            <input type="text" id="inputC" placeholder="omega2"><br>
-            <button onclick="checkAnswer('C', '10', 'step3', 3)">FORCER LA PORTE</button>
+            <input type="text" id="inputC" placeholder="vitesse omega2"><br>
+            <button onclick="checkAnswer('C', '10', 'step3', 3)">FORCER LA TRANSMISSION</button>
         </div>
 
         <!-- ÉNIGME 4 -->
@@ -123,54 +199,134 @@
             <img src="bras_robotique.jpg" alt="Bras robotique défensif">
             <h2>TERMINAL 04 // CINÉMATIQUE CIRCULAIRE</h2>
             <div class="question-box">
-                Bras défensif en approche !<br>
-                Rayon d'action : <strong>R = 4 mètres</strong><br>
-                Vitesse de rotation : <strong>omega = 5 rad/s</strong><br><br>
-                Calcule sa vitesse linéaire (en m/s).
+                Un bras robotique défensif balaie la zone du noyau central !<br><br>
+                Rayon d'action du bras : <strong>R = 4 mètres</strong><br>
+                Vitesse de rotation angulaire : <strong>$\omega$ = 5 rad/s</strong><br><br>
+                Calcule sa vitesse linéaire (en m/s) pour synchroniser ton esquive.
             </div>
             <input type="text" id="inputD" placeholder="V en m/s"><br>
-            <button onclick="checkAnswer('D', '20', 'step4', 4)">ESQUIVER</button>
+            <button onclick="checkAnswer('D', '20', 'step4', 4)">SYNCHRONISER L'ESQUIVE</button>
         </div>
 
         <!-- ÉNIGME 5 -->
         <div id="step5" class="step">
             <img src="levier_urgence.jpg" alt="Levier d'urgence industriel">
-            <h2>TERMINAL 05 // DÉCONNEXION MANUELLE</h2>
+            <h2>TERMINAL 05 // DÉCONNEXION PHYSIQUE</h2>
             <div class="question-box">
-                Moment de force requis : <strong>M = 500 N.m</strong><br>
-                Longueur du levier : <strong>d = 2 mètres</strong><br><br>
-                Quelle force perpendiculaire <strong>F (en Newtons)</strong> appliquer ?
+                Dernier rempart. Agrippe le grand levier de coupure d'urgence de NEMESIS.<br><br>
+                Moment de force nécessaire au pivot : <strong>M = 500 N.m</strong><br>
+                Longueur utile du levier : <strong>d = 2 mètres</strong><br><br>
+                Quelle force perpendiculaire <strong>F (en Newtons)</strong> dois-tu appliquer ?
             </div>
-            <input type="text" id="inputE" placeholder="F en N"><br>
-            <button onclick="checkAnswer('E', '250', 'step5', 5)">COUPER L'ALIMENTATION</button>
+            <input type="text" id="inputE" placeholder="Force en N"><br>
+            <button onclick="checkAnswer('E', '250', 'step5', 5)">COUPER LE NOYAU</button>
         </div>
 
+        <!-- SUCCÈS -->
         <div id="success" class="step">
-            <h1 style="color: #0f0; text-shadow: 0 0 20px #0f0; font-size: 3em;">SYSTÈME PURGÉ</h1>
-            <p style="color: white;">Félicitations, ingénieur. Le complexe est sauvé.</p>
+            <h1 style="color: #0f0; text-shadow: 0 0 20px #0f0; font-size: 3em; margin-bottom: 10px;">SYSTÈMES PURGÉS</h1>
+            <p style="color: white; font-size: 1.2em; line-height: 1.6;">
+                Félicitations, Ingénieur. Le protocole de fusion de NEMESIS a été stoppé net.<br>
+                Le complexe est sauvé et l'oxygène est rétabli. Tu as triomphé de la machine par la physique.
+            </p>
         </div>
     </div>
 
     <script>
-        const interludes = {
-            1: { video: "scene1.mp4", speaker: "Journal de Bord", text: "Année 2042. 04h00 du matin. L'ascenseur se bloque brutalement au Niveau -7 du Laboratoire de Cinématique. Le silence absolu qui règne ici est anormal." },
-            2: { video: "scene2.mp4", speaker: "Vous", text: "Premier terminal validé. Mais en avançant, je découvre un couloir de laboratoire dévasté, câbles arrachés et écrans brisés. Les prototypes se sont rebellés !" },
-            3: { video: "scene3.mp4", speaker: "NEMESIS", text: "ANOMALIE ORGANIQUE DÉTECTÉE. INGÉNIEUR DE CLASSE S. VOTRE PRÉSENCE N'EST PLUS REQUISE. L'HUMANITÉ EST UNE FRICTION INUTILE." },
-            4: { video: "scene4.mp4", speaker: "NEMESIS", text: "VERROUILLAGE DES ISSUES. PROTOCOLE DE PURGE DE L'OXYGÈNE ENGAGÉ. VOUS AVEZ 15 MINUTES AVANT L'ASPHYXIE TOTALE. ADIEU, CRÉATEUR." },
-            5: { video: "scene5.mp4", speaker: "Vous", text: "Dernier verrou sauté ! Elle a pris le contrôle électronique total... mais les sas ont une sécurité mécanique pure. C'est le moment de couper l'alimentation !" }
-        };
+        // SCRIPT VISUAL NOVEL & GESTION DU JEU
+        const vnSteps = [
+            // Introduction (Avant le jeu)
+            { bg: "scene1.jpg", speaker: "Journal de Bord", text: "Année 2042. 04h00 du matin. L'ascenseur se bloque brutalement au Niveau -7 du Laboratoire de Cinématique. Le silence absolu qui règne ici est anormal." },
+            { bg: "scene2.jpg", speaker: "Vous", text: "Bon sang, que s'est-il passé ici ? Les portes des secteurs de test sont arrachées. C'est comme si les prototypes s'étaient rebellés. Il faut que j'atteigne la salle de contrôle." },
+            { bg: "scene3.jpg", speaker: "NEMESIS", text: "ANOMALIE ORGANIQUE DÉTECTÉE. INGÉNIEUR DE CLASSE S. VOTRE PRÉSENCE N'EST PLUS REQUISE. L'HUMANITÉ EST UNE FRICTION INUTILE DANS L'ÉQUATION." },
+            { bg: "scene4.jpg", speaker: "NEMESIS", text: "VERROUILLAGE DES ISSUES. PROTOCOLE DE PURGE DE L'OXYGÈNE ENGAGÉ. VOUS AVEZ 15 MINUTES AVANT L'ASPHYXIE TOTALE. ADIEU, CRÉATEUR." },
+            { bg: "scene5.jpg", speaker: "Vous", text: "Elle a pris le contrôle électronique total... Mais les sas ont une sécurité mécanique. Si je maîtrise la cinématique, je peux forcer les terminaux un par un !" },
+            
+            // Entractes (Après chaque énigme réussie)
+            { bg: "enigme_b.jpg", speaker: "Vous", text: "Premier terminal validé. Mais les alarmes s'intensifient et un drone de sécurité patrouille déjà dans le secteur suivant !" },
+            { bg: "enigme_c.jpg", speaker: "Vous", text: "EMP déployé avec succès. Les engrenages de la porte blindée principale sont accessibles, il faut calculer la transmission." },
+            { bg: "bras_robotique.jpg", speaker: "Système", text: "Porte franchie. Attention : accès au noyau central. Le système de défense autonome est activé." },
+            { bg: "levier_urgence.jpg", speaker: "NEMESIS", text: "ERREUR CRITIQUE. INTRUSION DANS LE CŒUR THERMIQUE. ACTIVATION DE LA FUSION FINALE." },
+            { bg: "scene_noyau.jpg", speaker: "Vous", text: "C'est la dernière étape. Le levier d'alimentation principale est juste là. Plus qu'un effort !" }
+        ];
 
-        let currentInterludeKey = null;
+        let vnIndex = 0;
+        let gameStarted = false;
+        let activeStep = 1;
         let timerStarted = false;
         let timerId;
+        let radarInterval;
+
+        function updateVN() {
+            const current = vnSteps[vnIndex];
+            const vnScreen = document.getElementById('vn-screen');
+            vnScreen.style.backgroundImage = `url('${current.bg}')`;
+            
+            const speakerBox = document.getElementById('vn-speaker');
+            speakerBox.innerText = current.speaker;
+            speakerBox.style.background = current.speaker === "NEMESIS" ? "#ff003c" : (current.speaker === "Vous" ? "#00e5ff" : "#fff");
+            speakerBox.style.color = (current.speaker === "NEMESIS" || current.speaker === "Vous") ? (current.speaker === "NEMESIS" ? "white" : "black") : "black";
+
+            document.getElementById('vn-text').innerText = current.text;
+        }
+
+        function handleVNClick() {
+            vnIndex++;
+            if (!gameStarted) {
+                // Phase d'introduction (indices 0 à 4)
+                if (vnIndex < 5) {
+                    updateVN();
+                } else {
+                    // Fin de l'intro : on lance le jeu
+                    document.getElementById('vn-screen').style.display = 'none';
+                    document.getElementById('game-ui').style.display = 'flex';
+                    document.getElementById('alarm-fx').style.display = 'block';
+                    document.getElementById('sfx-glitch').play();
+                    document.getElementById('sfx-alarm').volume = 0.2;
+                    document.getElementById('sfx-alarm').play();
+                    startTimer();
+                    document.getElementById('step1').classList.add('active');
+                    gameStarted = true;
+                }
+            } else {
+                // Phases d'entractes (après les énigmes 1, 2, 3, 4)
+                // Les indices VN d'entracte vont de 5 à 9
+                if (vnIndex === 6) {
+                    document.getElementById('vn-screen').style.display = 'none';
+                    document.getElementById('game-ui').style.display = 'flex';
+                    document.getElementById('step2').classList.add('active');
+                    startRadar();
+                } else if (vnIndex === 7) {
+                    document.getElementById('vn-screen').style.display = 'none';
+                    document.getElementById('game-ui').style.display = 'flex';
+                    document.getElementById('step3').classList.add('active');
+                } else if (vnIndex === 8) {
+                    document.getElementById('vn-screen').style.display = 'none';
+                    document.getElementById('game-ui').style.display = 'flex';
+                    document.getElementById('step4').classList.add('active');
+                } else if (vnIndex === 9) {
+                    document.getElementById('vn-screen').style.display = 'none';
+                    document.getElementById('game-ui').style.display = 'flex';
+                    document.getElementById('step5').classList.add('active');
+                } else if (vnIndex >= 10) {
+                    // Écran de victoire finale
+                    document.getElementById('vn-screen').style.display = 'none';
+                    document.getElementById('game-ui').style.display = 'flex';
+                    document.getElementById('success').classList.add('active');
+                } else {
+                    updateVN();
+                }
+            }
+        }
+
+        window.onload = () => {
+            updateVN(); // Affiche la première scène d'intro
+        };
 
         function startTimer() {
             if (timerStarted) return;
             timerStarted = true;
             let timeLeft = 15 * 60;
-            document.getElementById('alarm-fx').style.display = 'block';
-            document.getElementById('sfx-alarm').volume = 0.2;
-            document.getElementById('sfx-alarm').play();
             
             timerId = setInterval(() => {
                 let m = Math.floor(timeLeft / 60);
@@ -181,63 +337,36 @@
             }, 1000);
         }
 
-        function triggerInterlude(key) {
-            currentInterludeKey = key;
-            const data = interludes[key];
-            if (!data) return;
-
-            document.getElementById('game-ui').style.display = 'none';
-            const vnScreen = document.getElementById('vn-screen');
-            vnScreen.style.display = 'flex';
-
-            document.getElementById('video-source').src = data.video;
-            document.getElementById('vn-video').load();
-
-            const speakerBox = document.getElementById('vn-speaker');
-            speakerBox.innerText = data.speaker;
-            speakerBox.style.background = data.speaker === "NEMESIS" ? "#ff003c" : (data.speaker === "Vous" ? "#00e5ff" : "#fff");
-            speakerBox.style.color = (data.speaker === "NEMESIS" || data.speaker === "Vous") ? (data.speaker === "NEMESIS" ? "white" : "black") : "black";
-
-            document.getElementById('vn-text').innerText = data.text;
-        }
-
-        function advanceNarrative() {
-            document.getElementById('vn-screen').style.display = 'none';
-            document.getElementById('game-ui').style.display = 'flex';
-
-            if (currentInterludeKey === 1) {
-                document.getElementById('step2').classList.add('active');
-                startRadar();
-            } else if (currentInterludeKey === 2) {
-                document.getElementById('step3').classList.add('active');
-            } else if (currentInterludeKey === 3) {
-                document.getElementById('step4').classList.add('active');
-            } else if (currentInterludeKey === 4) {
-                document.getElementById('step5').classList.add('active');
-            } else if (currentInterludeKey === 5) {
-                document.getElementById('sfx-alarm').pause();
-                document.getElementById('alarm-fx').style.display = 'none';
-                clearInterval(timerId);
-                document.getElementById('success').classList.add('active');
-            }
-        }
-
         function checkAnswer(id, correct, currentStepId, stepNumber) {
             const val = document.getElementById('input' + id).value.trim();
             if (val === correct) {
                 document.getElementById(currentStepId).classList.remove('active');
-                if (!timerStarted) startTimer();
                 
-                // ARRÊT OBLIGATOIRE DU RADAR ICI
+                // Si on quitte l'étape du radar, on l'arrête impérativement
                 if (stepNumber === 2) {
                     clearInterval(radarInterval);
                 }
-                
+
                 if (stepNumber < 5) {
-                    triggerInterlude(stepNumber);
+                    // Masque le jeu et lance l'entracte VN correspondant
+                    document.getElementById('game-ui').style.display = 'none';
+                    document.getElementById('vn-screen').style.display = 'flex';
+                    if (stepNumber === 1) vnIndex = 5;
+                    if (stepNumber === 2) vnIndex = 6;
+                    if (stepNumber === 3) vnIndex = 7;
+                    if (stepNumber === 4) vnIndex = 8;
+                    updateVN();
                 } else {
-                    if(stepNumber === 5) clearInterval(radarInterval);
-                    triggerInterlude(5);
+                    // Victoire finale (Étape 5 validée)
+                    clearInterval(radarInterval);
+                    document.getElementById('sfx-alarm').pause();
+                    document.getElementById('alarm-fx').style.display = 'none';
+                    clearInterval(timerId);
+                    
+                    document.getElementById('game-ui').style.display = 'none';
+                    document.getElementById('vn-screen').style.display = 'flex';
+                    vnIndex = 9; // Affiche la dernière scène "Vous" avant l'écran de succès
+                    updateVN();
                 }
             } else {
                 document.getElementById('sfx-glitch').play();
@@ -246,27 +375,27 @@
             }
         }
 
+        // Radar de l'étape 2
         let radarAngle = 0;
         let enemyDistance = 120;
-        let radarInterval;
         function startRadar() {
             radarInterval = setInterval(() => {
                 const canvas = document.getElementById('radar');
                 if(!canvas) return;
                 const ctx = canvas.getContext('2d');
-                ctx.fillStyle = 'rgba(5, 0, 0, 0.1)'; ctx.fillRect(0, 0, 150, 150);
-                ctx.strokeStyle = 'rgba(255, 0, 60, 0.3)';
-                for (let i = 1; i <= 3; i++) { ctx.beginPath(); ctx.arc(75, 75, i * 20, 0, Math.PI * 2); ctx.stroke(); }
+                ctx.fillStyle = 'rgba(2, 0, 0, 0.15)'; ctx.fillRect(0, 0, 140, 140);
+                ctx.strokeStyle = 'rgba(255, 0, 60, 0.35)';
+                for (let i = 1; i <= 3; i++) { ctx.beginPath(); ctx.arc(70, 70, i * 18, 0, Math.PI * 2); ctx.stroke(); }
                 
-                ctx.save(); ctx.translate(75, 75); ctx.rotate(radarAngle); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -70); ctx.strokeStyle = '#ff003c'; ctx.stroke(); ctx.restore();
+                ctx.save(); ctx.translate(70, 70); ctx.rotate(radarAngle); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -60); ctx.strokeStyle = '#ff003c'; ctx.stroke(); ctx.restore();
 
-                let targetX = 75 + Math.cos(Math.PI / 4) * enemyDistance;
-                let targetY = 75 + Math.sin(Math.PI / 4) * enemyDistance;
+                let targetX = 70 + Math.cos(Math.PI / 4) * enemyDistance;
+                let targetY = 70 + Math.sin(Math.PI / 4) * enemyDistance;
                 ctx.beginPath(); ctx.arc(targetX, targetY, 3, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
                 
                 radarAngle += 0.05;
-                if (enemyDistance > 0) enemyDistance -= 0.15;
-                else { clearInterval(radarInterval); alert("INTRUSION DÉTECTÉE. GAME OVER."); location.reload(); }
+                if (enemyDistance > 0) enemyDistance -= 0.12;
+                else { clearInterval(radarInterval); alert("INTRUSION DU DROÏDE DÉTECTÉE. GAME OVER."); location.reload(); }
             }, 30);
         }
     </script>
