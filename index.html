@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>ESCAPE_ROBOTICS // 10 SALLES + INTRO VIDÉO</title>
+    <title>ESCAPE_ROBOTICS // 10 SALLES CINÉMATIQUE BAC</title>
     <style>
         :root {
             --neon-red: #ff003c;
@@ -30,7 +30,7 @@
 
         .alarm-light {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 0, 0, 0.08); animation: strobe 2.5s infinite;
+            background: rgba(255, 0, 0, 0.05); animation: strobe 3s infinite;
             z-index: 1; pointer-events: none; display: none;
         }
         @keyframes strobe { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
@@ -132,7 +132,6 @@
     <div class="alarm-light" id="alarm-fx"></div>
 
     <audio id="sfx-glitch" src="https://actions.google.com/sounds/v1/science_fiction/spark_and_hiss.ogg"></audio>
-    <audio id="sfx-alarm" src="https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg" loop></audio>
 
     <!-- ÉCRAN D'INTRODUCTION VIDÉO & ENTRACTES -->
     <div id="vn-screen" onclick="handleVNClick()">
@@ -148,12 +147,12 @@
         </div>
     </div>
 
-    <!-- PLATEFORME DES 10 ÉNIGMES DU JEU -->
+    <!-- PLATEFORME DES 10 ÉNIGMES DE CINÉMATIQUE (NIVEAU BAC) -->
     <div id="game-ui">
         <header>
             <div>
                 <h1 style="margin: 0; font-size: 1.3em;">IA // NEMESIS (10 SALLES)</h1>
-                <p style="margin: 0; font-size: 0.85em; color: #aaa;">LABORATOIRE DE CINÉMATIQUE - NIVEAU -7</p>
+                <p style="margin: 0; font-size: 0.85em; color: #aaa;">CINÉMATIQUE NIVEAU BAC</p>
             </div>
             <div id="timer">15:00</div>
         </header>
@@ -161,44 +160,40 @@
         <!-- ÉNIGME 1 -->
         <div id="step1" class="step">
             <img src="enigme_a.jpg" alt="Terminal holographique">
-            <h2>SALLE 01 // DÉRIVÉES CINÉMATIQUES</h2>
+            <h2>SALLE 01 // VECTEUR POSITION ET VITESSE</h2>
             <div class="question-box">
-                Entrez le code binaire de validation (Vrai=1, Faux=0) :<br>
-                1. La dérivée du vecteur position donne l'accélération.<br>
-                2. En translation, tous les points ont la même vitesse.<br>
-                3. Accélération nulle = mouvement uniformément varié.<br>
-                4. L'unité de la vitesse angulaire est le rad/s.
+                Un mobile a pour vecteur position $x(t) = 3t^2 + 2t + 1$.<br>
+                Calcule sa vitesse instantanée $v(t)$ à l'instant <strong>t = 4s</strong> ($v(t) = dx/dt = 6t + 2$).
             </div>
-            <input type="text" id="input1" maxlength="4" placeholder="0000"><br>
-            <button onclick="checkAnswer('1', '0101', 'step1', 1)">VALIDER</button>
+            <input type="text" id="input1" placeholder="v en m/s"><br>
+            <button onclick="checkAnswer('1', '26', 'step1', 1)">VALIDER</button>
         </div>
 
         <!-- ÉNIGME 2 -->
         <div id="step2" class="step">
             <img src="enigme_b.jpg" alt="Drone de sécurité">
-            <h2>SALLE 02 // RADAR DE PROXIMITÉ</h2>
+            <h2>SALLE 02 // ACCÉLÉRATION INSTANTANÉE</h2>
             <div style="display: flex; justify-content: center; margin-bottom: 8px;">
                 <canvas id="radar" width="120" height="120"></canvas>
             </div>
             <div class="question-box" style="margin-top:0;">
-                Drone en approche ! Équation : $x(t) = 2t^2 + 5t$.<br>
-                Calcule sa vitesse instantanée à <strong>t = 3s</strong> pour déclencher l'EMP.
+                Un drone accélère selon la loi horaire $x(t) = t^3 - 2t^2 + 5$.<br>
+                Calcule son accélération $a(t)$ à l'instant <strong>t = 3s</strong> ($a(t) = d^2x/dt^2 = 6t - 4$).
             </div>
-            <input type="text" id="input2" placeholder="v en m/s"><br>
-            <button onclick="checkAnswer('2', '17', 'step2', 2)">DÉCLENCHER EMP</button>
+            <input type="text" id="input2" placeholder="a en m/s²"><br>
+            <button onclick="checkAnswer('2', '14', 'step2', 2)">VALIDER</button>
         </div>
 
         <!-- ÉNIGME 3 -->
         <div id="step3" class="step">
             <img src="enigme_c.jpg" alt="Engrenages mécaniques">
-            <h2>SALLE 03 // TRANSMISSION DE PUISSANCE</h2>
+            <h2>SALLE 03 // MOUVEMENT RECTILIGNE UNIFORME</h2>
             <div class="question-box">
-                Roue motrice (1) : Z1 = 20 dents, $\omega_1$ = 30 rad/s.<br>
-                Roue réceptrice porte (2) : Z2 = 60 dents.<br>
-                Quelle est la vitesse de rotation $\omega_2$ (en rad/s) de la porte ?
+                Un robot de maintenance parcourt une distance de <strong>150 mètres</strong> à une vitesse constante en <strong>10 secondes</strong>.<br>
+                Quelle est sa vitesse $v$ (en m/s) ?
             </div>
-            <input type="text" id="input3" placeholder="omega2"><br>
-            <button onclick="checkAnswer('3', '10', 'step3', 3)">FORCER LA PORTE</button>
+            <input type="text" id="input3" placeholder="v en m/s"><br>
+            <button onclick="checkAnswer('3', '15', 'step3', 3)">VALIDER</button>
         </div>
 
         <!-- ÉNIGME 4 -->
@@ -206,87 +201,82 @@
             <img src="bras_robotique.jpg" alt="Bras robotique défensif">
             <h2>SALLE 04 // CINÉMATIQUE CIRCULAIRE</h2>
             <div class="question-box">
-                Rayon d'action du bras défensif : <strong>R = 4 mètres</strong>.<br>
-                Vitesse angulaire : <strong>$\omega$ = 5 rad/s</strong>.<br>
-                Calcule sa vitesse linéaire (en m/s) pour synchroniser ton esquive.
+                Un bras robotique tourne avec une vitesse angulaire constante <strong>$\omega$ = 4 rad/s</strong> à une distance du centre de <strong>R = 3 mètres</strong>.<br>
+                Calcule sa vitesse linéaire $v$ ($v = R \cdot \omega$).
             </div>
             <input type="text" id="input4" placeholder="V en m/s"><br>
-            <button onclick="checkAnswer('4', '20', 'step4', 4)">ESQUIVER</button>
+            <button onclick="checkAnswer('4', '12', 'step4', 4)">VALIDER</button>
         </div>
 
         <!-- ÉNIGME 5 -->
         <div id="step5" class="step">
             <img src="levier_urgence.jpg" alt="Levier d'urgence industriel">
-            <h2>SALLE 05 // MOMENT DE FORCE</h2>
+            <h2>SALLE 05 // CHUTE LIBRE SANS VITESSE INITIALE</h2>
             <div class="question-box">
-                Moment requis au pivot : <strong>M = 500 N.m</strong>.<br>
-                Longueur du levier : <strong>d = 2 mètres</strong>.<br>
-                Quelle force perpendiculaire <strong>F (en Newtons)</strong> appliquer ?
+                Un objet chute en chute libre sur une hauteur $h = \frac{1}{2}gt^2$.<br>
+                Sachant que l'accélération de la pesanteur est $g = 10 \text{ m/s}^2$ et qu'il met <strong>t = 2 secondes</strong> pour toucher le sol, quelle est la hauteur <strong>h (en mètres)</strong> ?
             </div>
-            <input type="text" id="input5" placeholder="Force en N"><br>
-            <button onclick="checkAnswer('5', '250', 'step5', 5)">ACTIONNER</button>
+            <input type="text" id="input5" placeholder="h en mètres"><br>
+            <button onclick="checkAnswer('5', '20', 'step5', 5)">VALIDER</button>
         </div>
 
         <!-- ÉNIGME 6 -->
         <div id="step6" class="step">
             <img src="scene_noyau.jpg" alt="Surchauffe thermique">
-            <h2>SALLE 06 // ÉCHANGE THERMIQUE</h2>
+            <h2>SALLE 06 // MOUVEMENT UNIFORMÉMENT ACCÉLÉRÉ</h2>
             <div class="question-box">
-                Réacteur auxiliaire en surchauffe ! Énergie à dissiper : <strong>Q = 12000 Joules</strong>.<br>
-                Masse du fluide : <strong>m = 10 kg</strong>, capacité thermique : <strong>c = 400 J/(kg.K)</strong>.<br>
-                Calcule l'élévation de température <strong>$\Delta T$ (en Kelvin)</strong>.
+                Un ascenseur d'urgence part du repos ($v_0 = 0$) avec une accélération constante <strong>a = 2 m/s²</strong> pendant <strong>t = 5 secondes</strong>.<br>
+                Quelle est sa vitesse finale <strong>v (en m/s)</strong> ($v = a \cdot t$) ?
             </div>
-            <input type="text" id="input6" placeholder="Delta T en K"><br>
-            <button onclick="checkAnswer('6', '3', 'step6', 6)">REFRODIR</button>
+            <input type="text" id="input6" placeholder="v en m/s"><br>
+            <button onclick="checkAnswer('6', '10', 'step6', 6)">VALIDER</button>
         </div>
 
-        <!-- ÉNIGME 7 -->
+        <!-- ÉNIGME 7 (VERSION NIVEAU BAC SIMPLIFIÉE) -->
         <div id="step7" class="step">
             <img src="enigme_a.jpg" alt="Plan incliné de sécurité">
-            <h2>SALLE 07 // STATIQUE DES SOLIDES</h2>
+            <h2>SALLE 07 // CALCUL D'ACCÉLÉRATION MOYENNE</h2>
             <div class="question-box">
-                Bloc de sécurité sur plan incliné à l'équilibre limite, angle <strong>$\alpha$ = 30°</strong>.<br>
-                Coefficient de frottement statique $\mu = \tan(\alpha)$.<br>
-                Sachant que $\tan(30^\circ) \approx 0.577$, arrondis au centième près.
+                Un système de freinage réduit la vitesse d'un chariot de <strong>30 m/s à 10 m/s</strong> en un intervalle de temps de <strong>4 secondes</strong>.<br>
+                Calcule l'accélération moyenne $a = \frac{\Delta v}{\Delta t}$ (exprime la valeur absolue en m/s²).
             </div>
-            <input type="text" id="input7" placeholder="Coefficient mu"><br>
-            <button onclick="checkAnswer('7', '0.58', 'step7', 7)">DÉBLOQUER</button>
+            <input type="text" id="input7" placeholder="a en m/s²"><br>
+            <button onclick="checkAnswer('7', '5', 'step7', 7)">VALIDER</button>
         </div>
 
         <!-- ÉNIGME 8 -->
         <div id="step8" class="step">
             <img src="enigme_c.jpg" alt="Mécanisme à ressort">
-            <h2>SALLE 08 // SYSTÈME MASSE-RESSORT</h2>
+            <h2>SALLE 08 // FRÉQUENCE DE ROTATION</h2>
             <div class="question-box">
-                Valve régulée par un ressort de raideur <strong>k = 400 N/m</strong>, masse <strong>m = 1 kg</strong>.<br>
-                Période $T = 2\pi \sqrt{m/k}$. Avec $\pi \approx 3.14$ et $\sqrt{0.0025} = 0.05$, calcule <strong>T (en secondes)</strong> à 2 décimales.
+                Un rotor effectue <strong>120 tours par minute (tr/min)</strong>.<br>
+                Convertis cette fréquence en hertz (Hz ou tours par seconde). Sachant qu'une minute vaut 60 secondes, calcule la fréquence $f$.
             </div>
-            <input type="text" id="input8" placeholder="T en secondes"><br>
-            <button onclick="checkAnswer('8', '0.31', 'step8', 8)">RÉGLER</button>
+            <input type="text" id="input8" placeholder="f en Hz"><br>
+            <button onclick="checkAnswer('8', '2', 'step8', 8)">VALIDER</button>
         </div>
 
         <!-- ÉNIGME 9 -->
         <div id="step9" class="step">
             <img src="levier_urgence.jpg" alt="Trappe de service">
-            <h2>SALLE 09 // ÉNERGIE MÉCANIQUE</h2>
+            <h2>SALLE 09 // DISTANCE DE FREINAGE</h2>
             <div class="question-box">
-                Contrepoids de masse <strong>m = 20 kg</strong> chutant d'une hauteur <strong>h = 5 mètres</strong> ($g = 10 \text{ m/s}^2$).<br>
-                Calcule son énergie cinétique finale <strong>$E_c$ (en Joules)</strong>.
+                Un véhicule arrivant à une vitesse $v = 20 \text{ m/s}$ subit une décélération constante $a = 4 \text{ m/s}^2$ jusqu'à l'arrêt complet.<br>
+                La distance de freinage s'obtient par la formule $d = \frac{v^2}{2a}$. Calcule <strong>d (en mètres)</strong>.
             </div>
-            <input type="text" id="input9" placeholder="Ec en Joules"><br>
-            <button onclick="checkAnswer('9', '1000', 'step9', 9)">AMORTIR</button>
+            <input type="text" id="input9" placeholder="d en mètres"><br>
+            <button onclick="checkAnswer('9', '50', 'step9', 9)">VALIDER</button>
         </div>
 
         <!-- ÉNIGME 10 -->
         <div id="step10" class="step">
             <img src="scene_noyau.jpg" alt="Cœur central de NEMESIS">
-            <h2>SALLE 10 // NOYAU CENTRAL DE NEMESIS</h2>
+            <h2>SALLE 10 // SYNTHÈSE CINÉMATIQUE FINALE</h2>
             <div class="question-box">
-                Dernier accès au processeur central. Entrez la somme des résultats clés :<br>
-                (Vitesse EMP [17] + Vitesse porte [10] + Vitesse bras [20] + Force levier [250] + Température Delta T [3]) = ?
+                Dernier accès au processeur central. Pour neutraliser l'IA, entre la somme de tous les résultats des vitesses et hauteurs clés obtenues (Salle 1 [26] + Salle 3 [15] + Salle 5 [20] + Salle 6 [10] + Salle 9 [50]) = ?
             </div>
             <input type="text" id="input10" placeholder="Code total"><br>
-            <button onclick="checkAnswer('10', '300', 'step10', 10)">PURGER NEMESIS</button>
+            <button onclick="checkAnswer('10', '121', 'step10', 10)">PURGER NEMESIS</button>
         </div>
 
         <!-- SUCCÈS -->
@@ -294,32 +284,29 @@
             <h1 style="color: #0f0; text-shadow: 0 0 20px #0f0; font-size: 2.8em; margin-bottom: 10px;">IA DÉSACTIVÉE</h1>
             <p style="color: white; font-size: 1.1em; line-height: 1.6;">
                 Exploit légendaire, Ingénieur de Classe S !<br>
-                Tu as traversé les 10 niveaux de sécurité et neutralisé NEMESIS. Le complexe est sauvé.
+                Tu as traversé les 10 salles de cinématique et neutralisé NEMESIS. Le complexe est sauvé.
             </p>
         </div>
     </div>
 
     <script>
-        // Séquence des 5 vidéos d'introduction (indices 0 à 4) suivies des entractes (5 à 13)
         const vnSteps = [
-            // Intro Vidéo 1 à 5
             { type: "video", src: "scene1.mp4", bg: "", speaker: "Journal de Bord", text: "Année 2042. 04h00 du matin. L'ascenseur se bloque brutalement au Niveau -7 du Laboratoire de Cinématique." },
             { type: "video", src: "scene2.mp4", bg: "", speaker: "Vous", text: "Les portes des secteurs de test sont arrachées. C'est comme si les prototypes s'étaient rebellés." },
             { type: "video", src: "scene3.mp4", bg: "", speaker: "NEMESIS", text: "ANOMALIE ORGANIQUE DÉTECTÉE. INGÉNIEUR DE CLASSE S. VOTRE PRÉSENCE N'EST PAS REQUISE." },
             { type: "video", src: "scene4.mp4", bg: "", speaker: "NEMESIS", text: "PROTOCOLE DE PURGE DE L'OXYGÈNE ENGAGÉ. VOUS AVEZ 15 MINUTES. ADIEU, CRÉATEUR." },
-            { type: "video", src: "scene5.mp4", bg: "", speaker: "Vous", text: "Elle a tout verrouillé électroniquement... Je dois franchir les 10 salles de contrôle en passant par la physique pure !" },
+            { type: "video", src: "scene5.mp4", bg: "", speaker: "Vous", text: "Elle a tout verrouillé électroniquement... Je dois franchir les 10 salles de contrôle en résolvant les équations de cinématique !" },
             
-            // Entractes intermédiaires (Images fixes / dialogues)
-            { type: "image", src: "enigme_b.jpg", speaker: "Vous", text: "Salle 01 validée. Mais les alarmes hurlent et un drone de combat patrouille dans le couloir." },
-            { type: "image", src: "enigme_c.jpg", speaker: "Vous", text: "EMP activé. La porte blindée principale cède, révélant le système de transmission d'engrenages." },
-            { type: "image", src: "bras_robotique.jpg", speaker: "Système", text: "Transmission forcée. Attention : un bras robotique de défense balaie la zone suivante." },
-            { type: "image", src: "levier_urgence.jpg", speaker: "Vous", text: "Esquive réussie ! Le levier d'urgence mécanique est en vue pour couper les sous-systèmes." },
-            { type: "image", src: "scene_noyau.jpg", speaker: "NEMESIS", text: "ALERTE THERMIQUE ! LE RÉACTEUR ENTRE EN SURCHAUFFE. VOUS NE PASSEREZ PAS." },
-            { type: "image", src: "enigme_a.jpg", speaker: "Vous", text: "Refroidissement opéré de justesse. Le bloc de sécurité anti-intrusion bloque le passage suivant." },
-            { type: "image", src: "enigme_c.jpg", speaker: "Vous", text: "Bloc libéré. La valve de surpression du circuit pneumatique vibre dangereusement." },
-            { type: "image", src: "levier_urgence.jpg", speaker: "Vous", text: "Valve réglée. Trappe de service ouverte : le contrepoids de secours est suspendu au-dessus du vide." },
+            { type: "image", src: "enigme_b.jpg", speaker: "Vous", text: "Salle 01 validée. Mais un drone de combat patrouille dans le couloir." },
+            { type: "image", src: "enigme_c.jpg", speaker: "Vous", text: "Drone neutralisé. La porte blindée principale cède, révélant le système de transmission." },
+            { type: "image", src: "bras_robotique.jpg", speaker: "Système", text: "Transmission forcée. Attention : un bras robotique de défense balaie la zone." },
+            { type: "image", src: "levier_urgence.jpg", speaker: "Vous", text: "Esquive réussie ! Le système de sas par chute libre est en vue." },
+            { type: "image", src: "scene_noyau.jpg", speaker: "NEMESIS", text: "ALERTE ACCÉLÉRATION ! LE RÉACTEUR ENTRE EN SURCHAUFFE." },
+            { type: "image", src: "enigme_a.jpg", speaker: "Vous", text: "Freinage opéré de justesse. Le secteur suivant demande une analyse de vitesse." },
+            { type: "image", src: "enigme_c.jpg", speaker: "Vous", text: "Vitesse calculée. Le rotor principal tourne à plein régime." },
+            { type: "image", src: "levier_urgence.jpg", speaker: "Vous", text: "Fréquence réglée. Trappe de service ouverte : calcul de la distance de freinage requise." },
             { type: "image", src: "scene_noyau.jpg", speaker: "NEMESIS", text: "DERNIÈRE LIGNE DE DÉFENSE ATTEINTE. VOUS ÊTES AUX PORTES DE MON PROCESSEUR CENTRAL." },
-            { type: "image", src: "scene_noyau.jpg", speaker: "Vous", text: "C'est l'heure de l'ultime calcul pour effacer cette IA démente une bonne fois pour toutes !" }
+            { type: "image", src: "scene_noyau.jpg", speaker: "Vous", text: "C'est l'heure de l'ultime calcul cinématique pour effacer cette IA !" }
         ];
 
         let vnIndex = 0;
@@ -360,19 +347,15 @@
                 if (vnIndex < 5) {
                     updateVN();
                 } else {
-                    // Fin de la cinématique d'intro vidéo : lancement du jeu
                     document.getElementById('vn-screen').style.display = 'none';
                     document.getElementById('game-ui').style.display = 'flex';
                     document.getElementById('alarm-fx').style.display = 'block';
                     document.getElementById('sfx-glitch').play();
-                    document.getElementById('sfx-alarm').volume = 0.2;
-                    document.getElementById('sfx-alarm').play();
                     startTimer();
                     document.getElementById('step1').classList.add('active');
                     gameStarted = true;
                 }
             } else {
-                // Gestion des entractes après chaque salle (indices 5 à 13)
                 if (vnIndex === 6) { document.getElementById('vn-screen').style.display = 'none'; document.getElementById('game-ui').style.display = 'flex'; document.getElementById('step2').classList.add('active'); startRadar(); }
                 else if (vnIndex === 7) { document.getElementById('vn-screen').style.display = 'none'; document.getElementById('game-ui').style.display = 'flex'; document.getElementById('step3').classList.add('active'); }
                 else if (vnIndex === 8) { document.getElementById('vn-screen').style.display = 'none'; document.getElementById('game-ui').style.display = 'flex'; document.getElementById('step4').classList.add('active'); }
@@ -424,7 +407,6 @@
                     updateVN();
                 } else {
                     if(stepNumber === 2) clearInterval(radarInterval);
-                    document.getElementById('sfx-alarm').pause();
                     document.getElementById('alarm-fx').style.display = 'none';
                     clearInterval(timerId);
                     
